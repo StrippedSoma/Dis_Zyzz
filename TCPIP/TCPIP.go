@@ -21,11 +21,14 @@ func main() {
 		defer wg.Done()
 		client(channel1, channel2, channel3)
 	}()
-
-	if <-channel3 == 1 {
+	
+	var x = <- channel3
+	if x == 1 {
 		fmt.Println("client spazzed out")
-	} else if <-channel3 == 2 {
+	} else if x == 2 {
 		fmt.Println("server spazzed out")
+	} else if x == 3 {
+		fmt.Println("TCPIP SUCCESSFUL")
 	}
 	wg.Wait()
 }
@@ -49,6 +52,8 @@ func client(chanOut chan int, chanIn chan int, toMain chan int) {
 				sSeq = <-chanIn + 1
 				chanOut <- sSeq
 				done = true
+				fmt.Println("SUCCESS")
+				toMain <- 0
 			} else {
 				fmt.Println("server response not valid, resending")
 				attempts++
@@ -59,7 +64,7 @@ func client(chanOut chan int, chanIn chan int, toMain chan int) {
 		}
 
 	}
-
+	fmt.Println("LOOP DONE")
 }
 
 func server(chanOut chan int, chanIn chan int, toMain chan int) {
@@ -89,6 +94,7 @@ func server(chanOut chan int, chanIn chan int, toMain chan int) {
 			if sSeq+1 == clientresponse {
 				fmt.Println("SUCCESS")
 				done = true
+				toMain <- 0
 			} else {
 				fmt.Println("FAILURE")
 			}
@@ -98,5 +104,5 @@ func server(chanOut chan int, chanIn chan int, toMain chan int) {
 			attempts++
 		}
 	}
-
+	fmt.Println("LOOP DONE")
 }
