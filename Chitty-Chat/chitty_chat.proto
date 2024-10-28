@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package main;
+
+option go_package = "./Chitty-Chat";
+
+message Participant {
+    string id = 1; // Unique identifier for the participant
+}
+
+message Message {
+    int64 timestamp = 1; // Lamport timestamp
+    string sender_id = 2; // The ID of the sender
+    string text = 3; // UTF-8 encoded chat message (max 128 characters)
+}
+
+message JoinLeaveNotification {
+    string participant_id = 1; // The ID of the participant who joined/left
+    int64 timestamp = 2; // Lamport timestamp
+    bool is_join = 3; // True if join, false if leave
+}
+
+message PublishRequest {
+    string sender_id = 1; // The ID of the sender
+    string text = 2; // Message content (max 128 characters)
+}
+
+message Empty {}
+
+service ChittyChat {
+    rpc JoinChat(Participant) returns (stream Message);
+    rpc PublishMessage(PublishRequest) returns (Empty);
+}
