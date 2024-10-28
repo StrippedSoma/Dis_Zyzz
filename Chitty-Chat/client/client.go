@@ -1,4 +1,4 @@
-package Main
+package main
 
 import (
 	"bufio"
@@ -23,7 +23,7 @@ func receiveMessages(client pb.ChittyChat_JoinChatClient) {
 	}
 }
 
-func Main() {
+func main() {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Could not connect: %v", err)

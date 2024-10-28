@@ -1,4 +1,4 @@
-package Main
+package main
 
 import (
 	pb "Dis_Zyzz/Chitty-Chat/proto"
@@ -105,7 +105,7 @@ func (s *ChittyChatServer) broadcastMessage(message *pb.Message) {
 	}
 }
 
-func Main() {
+func main() {
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
