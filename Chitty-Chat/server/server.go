@@ -88,7 +88,7 @@ func (s *ChittyChatServer) JoinChat(participant *pb.Participant, stream pb.Chitt
 func (s *ChittyChatServer) PublishMessage(ctx context.Context, req *pb.PublishRequest) (*pb.Empty, error) {
 	timestamp := s.clock.Increment()
 	message := &pb.Message{
-		SenderId:  "User",
+		SenderId:  req.SenderId,
 		Text:      req.Text,
 		Timestamp: timestamp,
 	}

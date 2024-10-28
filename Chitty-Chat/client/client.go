@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
 
@@ -45,6 +46,7 @@ func main() {
 	go receiveMessages(joinStream)
 
 	for {
+		time.Sleep(time.Millisecond * 500)
 		fmt.Print("Enter message: ")
 		text, _ := reader.ReadString('\n')
 		text = text[:len(text)-1]

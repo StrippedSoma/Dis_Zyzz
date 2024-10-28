@@ -21,7 +21,8 @@ message JoinLeaveNotification {
 }
 
 message PublishRequest {
-    string text = 1; // Message content (max 128 characters)
+    string sender_id = 1; // The ID of the sender
+    string text = 2; // Message content (max 128 characters)
 }
 
 message Empty {}
