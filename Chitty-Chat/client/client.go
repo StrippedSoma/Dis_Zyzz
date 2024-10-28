@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+
 	"time"
 
 	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
@@ -20,7 +21,8 @@ func receiveMessages(client pb.ChittyChat_JoinChatClient) {
 			log.Printf("Error receiving message: %v", err)
 			break
 		}
-		fmt.Printf("[%d] %s: %s\n", msg.Timestamp, msg.SenderId, msg.Text)
+
+		fmt.Printf("[%d] [%s] %s\n", msg.Timestamp, msg.SenderId, msg.Text)
 	}
 }
 

@@ -9,9 +9,9 @@ message Participant {
 }
 
 message Message {
-    string sender_id = 1; // The ID of the sender
-    string text = 2; // UTF-8 encoded chat message (max 128 characters)
-    int64 timestamp = 3; // Lamport timestamp
+    int64 timestamp = 1; // Lamport timestamp
+    string sender_id = 2; // The ID of the sender
+    string text = 3; // UTF-8 encoded chat message (max 128 characters)
 }
 
 message JoinLeaveNotification {
