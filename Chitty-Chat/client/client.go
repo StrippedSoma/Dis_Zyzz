@@ -1,15 +1,13 @@
 package main
 
 import (
+	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
 	"bufio"
 	"context"
 	"fmt"
 	"log"
 	"os"
-
-	"time"
-
-	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
+	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -21,8 +19,7 @@ func receiveMessages(client pb.ChittyChat_JoinChatClient) {
 			log.Printf("Error receiving message: %v", err)
 			break
 		}
-
-		fmt.Printf("[%d] [%s] %s\n", msg.Timestamp, msg.SenderId, msg.Text)
+		fmt.Printf("[%d] [%s] %s\n", msg.Timestamp, strings.ReplaceAll(msg.SenderId, "\r", ""), strings.ReplaceAll(msg.Text, "\r", ""))
 	}
 }
 
@@ -48,8 +45,6 @@ func main() {
 	go receiveMessages(joinStream)
 
 	for {
-		time.Sleep(time.Millisecond * 500)
-		fmt.Print("Enter message: ")
 		text, _ := reader.ReadString('\n')
 		text = text[:len(text)-1]
 

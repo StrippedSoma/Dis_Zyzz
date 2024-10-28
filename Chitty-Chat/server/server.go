@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 	"sync"
 
 	"google.golang.org/grpc"
@@ -92,7 +93,7 @@ func (s *ChittyChatServer) PublishMessage(ctx context.Context, req *pb.PublishRe
 		Text:      req.Text,
 		Timestamp: timestamp,
 	}
-	log.Printf("[%d] [%s] %s\n", message.Timestamp, message.SenderId, message.Text)
+	log.Printf("[%d] [%s] %s\n", message.Timestamp, strings.ReplaceAll(message.SenderId, "\r", ""), strings.ReplaceAll(message.Text, "\r", ""))
 
 	s.broadcastMessage(message)
 	return &pb.Empty{}, nil
