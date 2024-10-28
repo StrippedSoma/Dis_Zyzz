@@ -92,6 +92,8 @@ func (s *ChittyChatServer) PublishMessage(ctx context.Context, req *pb.PublishRe
 		Text:      req.Text,
 		Timestamp: timestamp,
 	}
+	log.Printf("[%d] [%s] %s\n", message.Timestamp, message.SenderId, message.Text)
+
 	s.broadcastMessage(message)
 	return &pb.Empty{}, nil
 }
