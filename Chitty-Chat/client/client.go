@@ -56,7 +56,7 @@ func main() {
 			continue
 		}
 
-		_, err := client.PublishMessage(context.Background(), &pb.PublishRequest{Text: text})
+		_, err := client.PublishMessage(context.Background(), &pb.PublishRequest{SenderId: id, Text: text})
 		if err != nil {
 			log.Printf("Could not send message: %v", err)
 		}
