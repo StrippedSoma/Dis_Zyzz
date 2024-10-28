@@ -7,3 +7,4 @@ It will ask you to write your name/participant id
 Now that client can send messages by writing in the terminal
 Now you have created a server and a client
 If you want to create another client then follow the steps from line 4-6
+To leave the chat, type "/leave"
