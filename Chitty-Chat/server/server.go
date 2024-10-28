@@ -1,7 +1,7 @@
 package Main
 
 import (
-	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
+	pb "Dis_Zyzz/Chitty-Chat/proto"
 	"context"
 	"fmt"
 	"log"
@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// LamportClock struct to manage logical timestamps
+// LamportClock structure to manage logical timestamps
 type LamportClock struct {
 	mu        sync.Mutex
 	timestamp int64
@@ -38,7 +38,7 @@ func max(a, b int64) int64 {
 	return b
 }
 
-// ChittyChatServer struct to manage chat clients and messages
+// ChittyChatServer structure manages chat clients and messages
 type ChittyChatServer struct {
 	pb.UnimplementedChittyChatServer
 	clock        LamportClock
@@ -46,14 +46,14 @@ type ChittyChatServer struct {
 	mu           sync.Mutex
 }
 
-// JoinChat handles new participants joining the chat
+// JoinChat handles new participants
 func (s *ChittyChatServer) JoinChat(participant *pb.Participant, stream pb.ChittyChat_JoinChatServer) error {
 	s.mu.Lock()
 	clientChan := make(chan *pb.Message, 100)
 	s.participants[participant.Id] = clientChan
 	s.mu.Unlock()
 
-	// Notify others that a new participant has joined
+	// Broadcast notification that a new participant has joined
 	timestamp := s.clock.Increment()
 	joinMsg := &pb.Message{
 		SenderId:  "System",
@@ -69,7 +69,7 @@ func (s *ChittyChatServer) JoinChat(participant *pb.Participant, stream pb.Chitt
 		}
 	}
 
-	// When disconnected
+	// Remove participant and broadcast notification that participant has left
 	s.mu.Lock()
 	delete(s.participants, participant.Id)
 	s.mu.Unlock()
@@ -118,7 +118,7 @@ func Main() {
 	}
 	pb.RegisterChittyChatServer(grpcServer, chatServer)
 
-	log.Println("Chitty-Chat server is running on port 50051...")
+	log.Println("Chitty-Chat server is running on port 50051 ...")
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
