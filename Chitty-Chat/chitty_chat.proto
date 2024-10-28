@@ -30,4 +30,5 @@ message Empty {}
 service ChittyChat {
     rpc JoinChat(Participant) returns (stream Message);
     rpc PublishMessage(PublishRequest) returns (Empty);
+    rpc LeaveChat(Participant) returns (Empty); 
 }

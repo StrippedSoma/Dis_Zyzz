@@ -43,10 +43,19 @@ func main() {
 	}
 
 	go receiveMessages(joinStream)
-
+	fmt.Print("Enter message (or /leave to exit): ")
 	for {
 		text, _ := reader.ReadString('\n')
 		text = text[:len(text)-1]
+
+		if text == "/leave\r" {
+			_, err := client.LeaveChat(context.Background(), &pb.Participant{Id: id})
+			if err != nil {
+				log.Printf("Could not leave chat: %v", err)
+			}
+			log.Printf("You have left the chat.")
+			break
+		}
 
 		if len(text) > 128 {
 			fmt.Println("Message too long! Maximum 128 characters.")

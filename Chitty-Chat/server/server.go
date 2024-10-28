@@ -4,13 +4,27 @@ import (
 	pb "Dis_Zyzz/Chitty-Chat/proto"
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
+	"os"
 	"strings"
 	"sync"
 
 	"google.golang.org/grpc"
 )
+
+func init() {
+
+	// log to console and file
+	f, err := os.OpenFile("my.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	wrt := io.MultiWriter(os.Stdout, f)
+
+	log.SetOutput(wrt)
+}
 
 // LamportClock structure to manage logical timestamps
 type LamportClock struct {
@@ -58,9 +72,10 @@ func (s *ChittyChatServer) JoinChat(participant *pb.Participant, stream pb.Chitt
 	timestamp := s.clock.Increment()
 	joinMsg := &pb.Message{
 		SenderId:  "System",
-		Text:      fmt.Sprintf("Participant %s joined Chitty-Chat at Lamport time %d", participant.Id, timestamp),
+		Text:      fmt.Sprintf("Participant %s joined Chitty-Chat at Lamport time %d", strings.ReplaceAll(participant.Id, "\r", ""), timestamp),
 		Timestamp: timestamp,
 	}
+	log.Print(joinMsg.Text)
 	s.broadcastMessage(joinMsg)
 
 	// Stream messages to this participant
@@ -76,13 +91,25 @@ func (s *ChittyChatServer) JoinChat(participant *pb.Participant, stream pb.Chitt
 	s.mu.Unlock()
 
 	timestamp = s.clock.Increment()
+
+	return nil
+}
+func (s *ChittyChatServer) LeaveChat(ctx context.Context, req *pb.Participant) (*pb.Empty, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	var id = req.Id
+	delete(s.participants, req.Id)
+
+	timestamp := s.clock.Increment()
+
 	leaveMsg := &pb.Message{
 		SenderId:  "System",
-		Text:      fmt.Sprintf("Participant %s left Chitty-Chat at Lamport time %d", participant.Id, timestamp),
+		Text:      fmt.Sprintf("Participant %s left Chitty-Chat at Lamport time %d", strings.ReplaceAll(id, "\r", ""), timestamp),
 		Timestamp: timestamp,
 	}
+	log.Print(leaveMsg.Text)
 	s.broadcastMessage(leaveMsg)
-	return nil
+	return &pb.Empty{}, nil
 }
 
 // PublishMessage handles incoming messages from clients
