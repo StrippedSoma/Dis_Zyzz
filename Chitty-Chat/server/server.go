@@ -1,15 +1,14 @@
-package main
+package Main
 
 import (
+	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
 	"context"
 	"fmt"
 	"log"
 	"net"
 	"sync"
-	"time"
 
 	"google.golang.org/grpc"
-	pb "path/to/chitty_chat" // Import the generated protobuf package
 )
 
 // LamportClock struct to manage logical timestamps
@@ -106,7 +105,7 @@ func (s *ChittyChatServer) broadcastMessage(message *pb.Message) {
 	}
 }
 
-func main() {
+func Main() {
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)

@@ -4,7 +4,7 @@
 // - protoc             v5.28.3
 // source: chitty_chat.proto
 
-package main
+package Chitty_Chat
 
 import (
 	context "context"

@@ -1,4 +1,4 @@
-package main
+package Main
 
 import (
 	"bufio"
@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
+
+	pb "Dis_Zyzz/Chitty-Chat/proto" // Import the generated protobuf package
 
 	"google.golang.org/grpc"
-	pb "path/to/chitty_chat" // Import the generated protobuf package
 )
 
 func receiveMessages(client pb.ChittyChat_JoinChatClient) {
@@ -23,7 +23,7 @@ func receiveMessages(client pb.ChittyChat_JoinChatClient) {
 	}
 }
 
-func main() {
+func Main() {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Could not connect: %v", err)
