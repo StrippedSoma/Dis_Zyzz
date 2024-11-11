@@ -1,0 +1,18 @@
+2024/11/11 22:46:00 Starting server for Node 1 on :50056
+2024/11/11 22:46:00 Node 1 requesting critical section
+2024/11/11 22:46:00 Node 1 requesting CS at timestamp 1
+2024/11/11 22:46:00 Node 1 entering critical section
+2024/11/11 22:46:32 Starting server for Node 2 on :50052
+2024/11/11 22:46:32 Node 2 requesting critical section
+2024/11/11 22:46:32 Node 2 requesting CS at timestamp 1
+2024/11/11 22:46:32 Node 1 received request from Node 2 at timestamp 1
+2024/11/11 22:47:09 Starting server for Node 3 on :50051
+2024/11/11 22:47:09 Node 3 requesting critical section
+2024/11/11 22:47:09 Node 3 requesting CS at timestamp 1
+2024/11/11 22:47:09 Node 2 received request from Node 3 at timestamp 1
+2024/11/11 22:47:09 Node 1 received request from Node 3 at timestamp 1
+2024/11/11 22:58:17 Starting server for Node 4 on :50059
+2024/11/11 22:58:34 Starting server for Node 5 on :50058
+2024/11/11 22:59:00 Starting server for Node 6 on :50053
+2024/11/11 22:59:12 Starting server for Node 7 on :50055
+2024/11/11 22:59:54 Starting server for Node 8 on :50054

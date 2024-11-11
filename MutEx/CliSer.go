@@ -9,9 +9,11 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
 	"strconv"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"google.golang.org/grpc"
@@ -336,10 +338,31 @@ func main() {
 	nodeID, _ := strconv.Atoi(occupiedPorts[len(occupiedPorts)-1])
 	address := occupiedPorts[len(occupiedPorts)-2] // Port for this node
 	peers := occupiedPorts[:len(occupiedPorts)-2]  // Other nodes' addresses
-	s := startServer(nodeID, address, filePath)    // Start server for the node
-	defer s.Shutdown()
-	startClient(nodeID, address, peers, s) // Start client functionality
+	if len(peers) == 0 {
 
+	}
+	s := startServer(nodeID, address, filePath) // Start server for the node
+	startClient(nodeID, address, peers, s)      // Start client functionality
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+	// Block and wait for signal
+	go func() {
+		<-sigChan
+		log.Println("Received shutdown signal. Quitting...")
+
+		// Gracefully notify server that this client is quitting
+		s.Shutdown()
+
+		if len(s.peers) == 0 {
+			os.Remove("mutex.log")
+		}
+
+		// Wait a moment to allow cleanup to complete
+		time.Sleep(1 * time.Second)
+		os.Exit(0)
+	}()
 	// Keep the server running
 	select {}
 }
