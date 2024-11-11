@@ -55,6 +55,7 @@ func (s *server) RequestAccess(ctx context.Context, req *mutex.RequestMessage) (
 
 	if !s.inCritical && (s.lamportClock < req.Timestamp || (s.lamportClock == req.Timestamp && int32(s.nodeID) < req.NodeId)) {
 		s.lamportClock++
+		log.Printf("Node %d granted access at timestamp %d\n", s.nodeID, s.lamportClock)
 		return &mutex.ReplyMessage{Granted: true, Timestamp: s.lamportClock}, nil
 	} else {
 		s.lamportClock++
@@ -109,6 +110,11 @@ func (s *server) removePeer(port string) {
 }
 
 func (s *server) Shutdown() {
+	if len(s.peers) == 0 {
+		log.Println("No peers to notify on shutdown.")
+		os.Remove("mutex.log")
+		return
+	}
 	_, err := s.peers[0].client.Quit(context.Background(), &mutex.QuitMessage{
 		NodeId: int32(s.nodeID),
 		Port:   s.peers[0].address, // This should be the address or port string
@@ -150,11 +156,12 @@ func (s *server) EnterCriticalSection() {
 	// Enter the critical section
 	s.inCritical = true
 	log.Printf("Node %d entering critical section\n", s.nodeID)
+	s.Release(context.Background(), &mutex.ReleaseMessage{Timestamp: reqTimestamp})
 }
 
 func (s *server) processPendingRequests() {
 	// This function can process queued requests from nodes waiting for CS
-	log.Printf("Processing pending requests\n")
+	log.Printf("Node %d now processing pending requests\n", s.nodeID)
 }
 
 func startServer(nodeID int, address string, filepath string) *server {
@@ -350,14 +357,10 @@ func main() {
 	// Block and wait for signal
 	go func() {
 		<-sigChan
-		log.Println("Received shutdown signal. Quitting...")
+		log.Printf("Node %d received shutdown signal. Quitting...", s.nodeID)
 
 		// Gracefully notify server that this client is quitting
 		s.Shutdown()
-
-		if len(s.peers) == 0 {
-			os.Remove("mutex.log")
-		}
 
 		// Wait a moment to allow cleanup to complete
 		time.Sleep(1 * time.Second)

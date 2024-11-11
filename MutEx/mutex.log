@@ -1,18 +1,29 @@
-2024/11/11 22:46:00 Starting server for Node 1 on :50056
-2024/11/11 22:46:00 Node 1 requesting critical section
-2024/11/11 22:46:00 Node 1 requesting CS at timestamp 1
-2024/11/11 22:46:00 Node 1 entering critical section
-2024/11/11 22:46:32 Starting server for Node 2 on :50052
-2024/11/11 22:46:32 Node 2 requesting critical section
-2024/11/11 22:46:32 Node 2 requesting CS at timestamp 1
-2024/11/11 22:46:32 Node 1 received request from Node 2 at timestamp 1
-2024/11/11 22:47:09 Starting server for Node 3 on :50051
-2024/11/11 22:47:09 Node 3 requesting critical section
-2024/11/11 22:47:09 Node 3 requesting CS at timestamp 1
-2024/11/11 22:47:09 Node 2 received request from Node 3 at timestamp 1
-2024/11/11 22:47:09 Node 1 received request from Node 3 at timestamp 1
-2024/11/11 22:58:17 Starting server for Node 4 on :50059
-2024/11/11 22:58:34 Starting server for Node 5 on :50058
-2024/11/11 22:59:00 Starting server for Node 6 on :50053
-2024/11/11 22:59:12 Starting server for Node 7 on :50055
-2024/11/11 22:59:54 Starting server for Node 8 on :50054
+2024/11/11 23:28:08 Starting server for Node 15 on :50058
+2024/11/11 23:28:08 Node 15 requesting critical section
+2024/11/11 23:28:08 Node 15 requesting CS at timestamp 1
+2024/11/11 23:28:08 Node 15 entering critical section
+2024/11/11 23:28:08 Node 15 releasing at timestamp 1
+2024/11/11 23:28:08 Node 15 now processing pending requests
+2024/11/11 23:28:20 Starting server for Node 16 on :50060
+2024/11/11 23:28:20 Node 16 requesting critical section
+2024/11/11 23:28:20 Node 16 requesting CS at timestamp 1
+2024/11/11 23:28:20 Node 15 received request from Node 16 at timestamp 1
+2024/11/11 23:28:36 Starting server for Node 17 on :50056
+2024/11/11 23:28:36 Node 17 requesting critical section
+2024/11/11 23:28:36 Node 17 requesting CS at timestamp 1
+2024/11/11 23:28:36 Node 16 received request from Node 17 at timestamp 1
+2024/11/11 23:28:36 Node 15 received request from Node 17 at timestamp 1
+2024/11/11 23:30:06 Node 15 received shutdown signal. Quitting...
+2024/11/11 23:30:06 No peers to notify on shutdown.
+2024/11/11 23:30:38 Starting server for Node 18 on :50060
+2024/11/11 23:30:38 Node 18 requesting critical section
+2024/11/11 23:30:38 Node 18 requesting CS at timestamp 1
+2024/11/11 23:30:38 Node 18 entering critical section
+2024/11/11 23:30:38 Node 18 releasing at timestamp 1
+2024/11/11 23:30:38 Node 18 now processing pending requests
+2024/11/11 23:30:46 Starting server for Node 19 on :50054
+2024/11/11 23:30:46 Node 19 requesting critical section
+2024/11/11 23:30:46 Node 19 requesting CS at timestamp 1
+2024/11/11 23:30:46 Node 18 received request from Node 19 at timestamp 1
+2024/11/11 23:36:35 Node 18 received shutdown signal. Quitting...
+2024/11/11 23:36:35 No peers to notify on shutdown.
