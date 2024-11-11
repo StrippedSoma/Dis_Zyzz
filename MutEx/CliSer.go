@@ -1,7 +1,7 @@
 package main
 
 import (
-	mutex "Dis_Zyzz/MutEx/mutex" // Import the generated package (adjust path based on your project structure)
+	mutex "Dis_Zyzz/MutEx/MutEx" // Import the generated package (adjust path based on your project structure)
 	"context"
 	"io"
 	"log"
