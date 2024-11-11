@@ -3,15 +3,16 @@ package main
 import (
 	mutex "Dis_Zyzz/MutEx/mutex" // Import the generated package (adjust path based on your project structure)
 	"context"
-	"fmt"
-	"google.golang.org/grpc"
 	"io"
 	"log"
 	"net"
 	"os"
-	"slices"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
+
+	"google.golang.org/grpc"
 )
 
 func init() {
@@ -40,7 +41,7 @@ func (s *server) RequestAccess(ctx context.Context, req *mutex.RequestMessage) (
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	fmt.Printf("Node %d received request from Node %d at timestamp %d\n", s.nodeID, req.NodeId, req.Timestamp)
+	log.Printf("Node %d received request from Node %d at timestamp %d\n", s.nodeID, req.NodeId, req.Timestamp)
 
 	if !s.inCritical && (s.lamportClock < req.Timestamp || (s.lamportClock == req.Timestamp && int32(s.nodeID) < req.NodeId)) {
 		s.lamportClock++
@@ -56,7 +57,7 @@ func (s *server) Release(ctx context.Context, req *mutex.ReleaseMessage) (*mutex
 	s.inCritical = false
 	s.replyCount = 0
 	s.lamportClock++
-	fmt.Printf("Node %d releasing at timestamp %d\n", s.nodeID, req.Timestamp)
+	log.Printf("Node %d releasing at timestamp %d\n", s.nodeID, req.Timestamp)
 	s.mu.Unlock()
 
 	// Notify peers and process any pending requests
@@ -71,7 +72,7 @@ func (s *server) EnterCriticalSection() {
 	reqTimestamp := s.lamportClock
 	s.mu.Unlock()
 
-	fmt.Printf("Node %d requesting CS at timestamp %d\n", s.nodeID, reqTimestamp)
+	log.Printf("Node %d requesting CS at timestamp %d\n", s.nodeID, reqTimestamp)
 
 	// Send RequestAccess to all peers
 	for _, peer := range s.peers {
@@ -96,12 +97,12 @@ func (s *server) EnterCriticalSection() {
 
 	// Enter the critical section
 	s.inCritical = true
-	fmt.Printf("Node %d entering critical section\n", s.nodeID)
+	log.Printf("Node %d entering critical section\n", s.nodeID)
 }
 
 func (s *server) processPendingRequests() {
 	// This function can process queued requests from nodes waiting for CS
-	fmt.Printf("Processing pending requests\n")
+	log.Printf("Processing pending requests\n")
 }
 
 func startServer(nodeID int, address string) *server {
@@ -114,7 +115,7 @@ func startServer(nodeID int, address string) *server {
 		nodeID: nodeID,
 	}
 	mutex.RegisterMutexServiceServer(grpcServer, s)
-	fmt.Printf("Starting server for Node %d on %s\n", nodeID, address)
+	log.Printf("Starting server for Node %d on %s\n", nodeID, address)
 	go func() {
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
@@ -141,18 +142,25 @@ func startClient(nodeID int, address string, peers []string, s *server) {
 	}
 
 	// Simulate the node requesting CS
-	fmt.Printf("Node %d requesting critical section\n", nodeID)
+	log.Printf("Node %d requesting critical section\n", nodeID)
 	s.EnterCriticalSection()
 }
 
-func main() {
+func discover() []string {
 	var slice []string
-	slice = make([]string, 0, 10)
+	slice = append(slice, "5-50051")
+	slice = append(slice, "localhost:50052")
+	slice = append(slice, "localhost:50053")
+	return slice
+}
 
-	nodeID := 1                           // For example, this is Node 1
-	address := ":50051"                   // Port for this node
-	peers := []string{":50052", ":50053"} // Other nodes' addresses
-	if slice.len() == 0 {
+func main() {
+	slice := discover()
+	user := strings.Split(slice[0], "-")
+	nodeID, _ := strconv.Atoi(user[0]) // For example, this is Node 1
+	address := user[1]                 // Port for this node
+	peers := slice[1:]                 // Other nodes' addresses
+	if len(slice) == 1 {
 		os.Truncate("/path/to/your/file/crop.csv", 0)
 	}
 	s := startServer(nodeID, address)      // Start server for the node
